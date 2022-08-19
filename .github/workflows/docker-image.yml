@@ -14,6 +14,11 @@ jobs:
         node: ["14.19", "16.15", "18.4"]
         distro: [debian, ubuntu]
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout
         uses: actions/checkout@ee5a9d1395988d7c82c67c69571871f5994b94df # pin@v2
@@ -42,7 +47,7 @@ jobs:
           df -h
 
       - name: Login to GitHub Container Registry
-        uses: docker/login-action@49ed152c8eca782a232dede0303416e8f356c37b # pin@v1
+        uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -56,6 +61,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/koyo-finance/${{ github.event.repository.name }}/${{ matrix.distro }}:${{ matrix.node }}
+            ghcr.io/koyo-finance/${{ github.repository }}/${{ matrix.distro }}:${{ matrix.node }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
